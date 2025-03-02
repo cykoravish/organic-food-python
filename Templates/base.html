@@ -1,0 +1,268 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grocery Store</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&family=Poppins:wght@100;400;700&family=Nunito:wght@200;600;900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div id="cart-container" class="cart-dropdown p-3 bg-light" style="display: none; position: absolute; top: 60px; right: 20px; width: 300px; border: 1px solid #ddd; box-shadow: 2px 2px 10px rgba(0,0,0,0.1);">
+      <p>Your cart is empty.</p>
+    </div>
+    
+    <a href="/" class="logo">
+      <img src="{% static 'assets/img/logo.png' %}" alt="Logo" class="img-fluid">
+    </a>
+    
+    
+    
+      <h1 class="sitename">Grocery</h1>
+
+      <nav id="navmenu" class="navmenu ms-auto d-flex pe-4  justify-content-end">
+
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/products">Products</a></li>
+          <li><a href="/Feature">Features</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/reviews">Review</a></li>
+          <li><a href="/orders">orders</a></li>
+
+          <div id="popup" style="display: block;">
+            <a href="#" id="popcart" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" title="Your Cart" class="nav_link scrollto  p-3 m-2 text-white d-flex align-items-center">
+                <img src="{% static 'assets/img/cart.png' %}" alt="Cart Icon" style="width: 70px; height: auto; margin-right: 30px;" />
+            </a>
+        </div>
+
+        
+        
+        
+        
+        
+          
+          {% if request.user.is_authenticated %}
+            <li><a class="nav-link scrollto" href="/auth/logout/">Logout</a></li>
+          {% else %}
+            <li>
+              <a href="#">My Profile <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+                <li><a href="/auth/signup/">Sign Up</a></li>
+                <li><a href="/auth/login/">Login</a></li>
+              </ul>
+            </li>
+          {% endif %}
+          
+          <li><a class="nav-link scrollto bg-dark p-2 m-2" href="/contact">Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+    </div>
+  </header>
+  
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero section dark-background">
+    <img src="{% static 'assets/img/carousel-2.jpg' %}" alt="Hero Image" data-aos="fade-in">
+    <div class="container text-center" data-aos="fade-up" data-aos-delay="100">
+      {% block content %}
+      {% endblock content %}
+    </div>
+  </section>
+
+
+
+
+
+
+
+
+
+
+ 
+  
+  <main id="main">
+    {% block body %}
+    {% endblock %}
+  </main>
+  {% load static %}
+
+
+    
+    
+    
+    
+
+
+
+  
+  
+  <footer class="bg-light">
+    <div class="container py-5">
+        <div class="row py-3">
+{% load static %}            
+
+         
+<!-- Organic Hub Description Section with Logo -->
+<div class="col-lg-3 col-md-6 mb-4 mb-lg-0 text-white">
+  <img src="{% static 'assets/img/logo1.jpg' %}" alt="Organic Hub Logo" style="width: 150px; margin-bottom: 10px;">
+
+  <h2 class="text-uppercase font-weight-bold mb-3" style="font-family: 'Poppins', sans-serif;"> Organic Hub</h2>
+  <p class="text-muted" >
+    Organic Hub is committed to providing high-quality, eco-friendly, and organic products. We promote a healthier lifestyle by offering fresh, natural, and sustainable choices while supporting local farmers.
+</p>
+
+
+
+
+</div>
+
+
+          
+          
+
+            <!-- Function Section -->
+            <div class="col-lg-2 col-md-6 mb-6 mb-lg-0">
+                <h3 class="text-uppercase font-weight-bold mb-4" style="color:rgb(30, 226, 30); font-family: 'Poppins', sans-serif;">Function</h3>
+                <ul class="list-unstyled mb-0">
+                    <li><a href="/" class="active" style="color: #CDAA7D; font-family: 'Poppins', sans-serif;">Home</a></li>
+                    <li><a href="/about" style="color: #CDAA7D; font-family: 'Poppins', sans-serif;">About</a></li>
+                    <li><a href="/products" style="color:#CDAA7D ; font-family: 'Poppins', sans-serif;">Products</a></li>
+                    <li><a href="/Feature" style="color:#CDAA7D; font-family: 'Poppins', sans-serif;">Features</a></li>
+                    <li><a href="/blog" style="color: #CDAA7D; font-family: 'Poppins', sans-serif;">Blog</a></li>
+                    <li><a href="/reviews" style="color: #CDAA7D; font-family: 'Poppins', sans-serif;">Review</a></li>
+                    <li><a href="/orders" style="color: #CDAA7D; font-family: 'Poppins', sans-serif;">Orders</a></li>
+                </ul>
+            </div>
+
+            <!-- Help Section -->
+            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                <h3 class="text-uppercase font-weight-bold mb-4" style="color:rgb(238, 16, 208); font-family: 'Poppins', sans-serif;">Help</h3>
+                <ul class="list-unstyled mb-0">
+                  <li class="mb-2"><a href="/checkout" style="color:rgb(209, 70, 79); font-family: 'Poppins', sans-serif;">Payments</a></li>
+                  <li class="mb-2"><a href="#" style="color:rgb(214, 54, 54); font-family: 'Poppins', sans-serif;">Shipping</a></li>
+                  <li class="mb-2"><a href="#" style="color:rgb(206, 48, 72); font-family: 'Poppins', sans-serif;">Cancellation</a></li>
+                  <li class="mb-2"><a href="#" style="color:rgb(202, 54, 54); font-family: 'Poppins', sans-serif;">Returns</a></li>
+              </ul>
+              
+            </div>
+
+            <!-- Policy Section -->
+            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+              <h3 class="text-uppercase font-weight-bold mb-4" style="color:rgb(216, 119, 29); font-family: 'Poppins', sans-serif;">Policy</h3>
+              <ul class="list-unstyled mb-0">
+                  <li class="mb-2"><a href="#" style="color:rgb(197, 226, 29); font-family: 'Poppins', sans-serif;">Return Policy</a></li>
+                  <li class="mb-2"><a href="#" style="color:rgb(197, 226, 29); font-family: 'Poppins', sans-serif;">Terms of Use</a></li>
+                  <li class="mb-2"><a href="#" style="color:rgb(197, 226, 29); font-family: 'Poppins', sans-serif;">Security</a></li>
+                  <li class="mb-2"><a href="#" style="color:rgb(197, 226, 29); font-family: 'Poppins', sans-serif;">Privacy</a></li>
+              </ul>
+          </div>
+          
+
+            <!-- User Section -->
+            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                <h3 class="text-uppercase font-weight-bold mb-4" style="color:rgb(172, 212, 24); font-family: 'Poppins', sans-serif;">User</h3>
+                <ul class="list-unstyled mb-0">
+                  <li class="mb-2"><a href="/auth/signup/" style="color: #CDAA7D; font-family: 'Poppins', sans-serif;">Register</a></li>
+                  <li class="mb-2"><a href="/auth/login/" style="color: #CDAA7D; font-family: 'Poppins', sans-serif;">Login</a></li>
+                  <li class="mb-2"><a href="/products" style="color: #CDAA7D; font-family: 'Poppins', sans-serif;">Our Products</a></li>
+              </ul>
+              
+            </div>
+
+            <!-- Contact Section -->
+            <div class="col-lg-4 col-md-6 mb-lg-0">
+                <h3 class="text-uppercase font-weight-bold mb-4" style="color:rgb(149, 235, 12); font-family: 'Poppins', sans-serif;">Contact</h3>
+                <p class="text-muted mb-4" style="font-family: 'Poppins', sans-serif;">Located at GMS Road, Dehradun, Uttarakhand 248001.</p>
+                <ul class="list-inline mt-4">
+                    <li class="list-inline-item"><a href="#" target="_blank" title="twitter"><i class="fab fa-2x fa-twitter"></i></a></li>
+                    <li class="list-inline-item"><a href="#" target="_blank" title="facebook"><i class="fab fa-2x fa-facebook-f"></i></a></li>
+                    <li class="list-inline-item"><a href="#" target="_blank" title="instagram"><i class="fab fa-2x fa-instagram"></i></a></li>
+                    <li class="list-inline-item"><a href="#" target="_blank" title="youtube"><i class="fab fa-2x fa-youtube"></i></a></li>
+                    <li class="list-inline-item"><a href="#" target="_blank" title="google"><i class="fab fa-2x fa-google"></i></a></li>
+                </ul>
+            </div>
+
+              
+              <!-- Stay Updated Section (Shifted to Right) -->
+              <div class="col-lg-4 col-md-6 mb-6 mb-lg-0">
+                <h3 class="text-uppercase font-weight-bold mb-4" style="color: #000; font-family: 'Poppins', sans-serif;">Stay Updated</h3>
+                <p class="text-muted" style="font-family: 'Poppins', sans-serif;">
+                    Subscribe to our newsletter for the latest updates, promotions, and exclusive offers.
+                </p>
+                
+                <!-- Email Subscription Form -->
+                <form action="#" method="POST">
+                  <div class="input-group">
+                    <input type="email" class="form-control" placeholder="Enter your email" required style="font-family: 'Poppins', sans-serif;">
+                    <button class="btn btn-success" type="submit" style="font-family: 'Poppins', sans-serif;">Subscribe</button>
+                  </div>
+                </form>
+              </div>
+        </div>
+    </div>
+
+    <!-- Bottom copyright -->
+    <div class="bg-light py-2">
+        <div class="container text-center">
+            <p class="text-muted mb-0 py-2" style="font-family: 'Poppins', sans-serif;">&copy; 2025 Organic Hub. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+
+<!-- Preloader -->
+<div id="preloader"></div>
+
+<!-- Vendor JS Files -->
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+<script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+<script src="{% static 'assets/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+<script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+<script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+<!-- Main JS File -->
+<script src="{% static 'assets/js/main.js' %}"></script>
+</body>
+</html>
+
+
+

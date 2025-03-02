@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="card bg-light p-4 mx-auto" style="max-width: 450px;">
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <strong>{{ message }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="form-container">
+        <form action="/auth/login/" method="post">
+            {% csrf_token %}
+            <h2 class="text-center">Login</h2>
+
+            <!-- Email Field -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control {% if form.email.errors %}is-invalid{% endif %}" id="email" name="email" value="{{ form.email.value }}" required>
+                {% if form.email.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.email.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="pass1">Password</label>
+                <input type="pass1" class="form-control {% if form.password.errors %}is-invalid{% endif %}" id="password" name="pass1" required>
+                {% if form.password.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.password.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <br>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+            <br><br>
+            <p class="text-center">New User? <a href="/auth/signup/">Sign Up</a></p>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

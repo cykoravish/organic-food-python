@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us{% endblock title %}
+
+{% block body %}
+<h1 class="text-center">Contact Us</h1>
+<div class="container mt-2">
+
+
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <strong>{{ message }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+  
+
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="form-container">
+                <form action="http://127.0.0.1:8000/contact/" method="post">
+                    {% csrf_token %}
+
+                    <!-- Full Name Field -->
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" class="form-control {% if form.name.errors %}is-invalid{% endif %}" id="name" name="name" required>
+                        {% if form.name.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.name.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control {% if form.email.errors %}is-invalid{% endif %}" id="email" name="email" value="{{user.email}}" required>
+                        {% if form.email.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.email.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Description Field -->
+                    <div class="form-group">
+                        <label for="desc">How Can I Help You?</label>
+                        <textarea class="form-control {% if form.desc.errors %}is-invalid{% endif %}" id="desc" name="message" required></textarea>
+                        {% if form.desc.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.desc.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Phone Number Field -->
+                    <div class="form-group">
+                        <label for="pnumber">Phone Number</label>
+                        <input type="number" class="form-control {% if form.pnumber.errors %}is-invalid{% endif %}" id="pnumber" name="phonenumber" required>
+                        {% if form.pnumber.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.pnumber.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <br />
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                    <br />
+                </form>
+            </div>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</div>
+{% endblock body %}
+
+<script>
+
+    // Load the cart from local storage
+    // Load cart from localStorage
+    function loadCart() {
+      return (JSON.parse(localStorage.getItem('cart')) || []).filter(item => item !== null);
+    }
+    
+    // Save the cart to localStorage
+    function saveCart(cart) {
+      localStorage.setItem('cart', JSON.stringify(cart.filter(item => item !== null)));
+    }
+    
+    // Get total price of cart items
+    function getCartTotal() {
+      return loadCart().reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2);
+    }
+    
+    // Get total number of items in cart
+    function getCartLength() {
+      return loadCart().reduce((total, item) => total + (item.quantity || 0), 0);
+    }
+    
+    function addToCart(id) {
+      let cart = loadCart();
+      let cartBtn = document.querySelector(`.cart[data-id='${id}']`);
+      
+      if (!cartBtn) return;
+    
+      let productName = cartBtn.getAttribute('data-name');
+      let productPrice = parseFloat(cartBtn.getAttribute('data-price'));
+      let productImage = cartBtn.getAttribute('data-image');
+    
+      let item = cart.find(item => String(item.id) === String(id));
+    
+      if (item) {
+          item.quantity += 1;
+      } else {
+          cart.push({ id, name: productName, price: productPrice, image: productImage, quantity: 1 });
+      }
+    
+      saveCart(cart);
+      updateCartCount();
+      refreshCartPopover();
+    }
+    
+    
+    // Increase or decrease quantity function
+    function updateCartQuantity(itemId, action) {
+      let cart = loadCart();
+      let item = cart.find(p => String(p.id) === String(itemId));
+    
+      if (item) {
+          if (action === 'increase') {
+              item.quantity += 1;
+          } else if (action === 'decrease') {
+              if (item.quantity > 1) {
+                  item.quantity -= 1;
+              } else {
+                  removeItemFromCart(itemId);
+                  return;
+              }
+          }
+    
+          saveCart(cart);
+    
+          let quantityInput = document.getElementById(`cart-qty-${itemId}`);
+          if (quantityInput) {
+              quantityInput.value = item.quantity;
+          }
+    
+          // ✅ Update cart UI
+          updateCartCount();
+          refreshCartPopover();
+      }
+    }
+    
+    // Remove item from cart
+    function removeItemFromCart(itemId) {
+      let cart = loadCart();
+      cart = cart.filter(item => String(item.id) !== String(itemId));
+      saveCart(cart);
+    
+      updateCartCount();
+      refreshCartPopover();
+    }
+    
+    // Event delegation for Increase & Decrease buttons
+    document.addEventListener('click', function (event) {
+      if (event.target.classList.contains('increase-cart')) {
+          let itemId = event.target.getAttribute('data-id');
+          updateCartQuantity(itemId, 'increase');
+      }
+    
+      if (event.target.classList.contains('decrease-cart')) {
+          let itemId = event.target.getAttribute('data-id');
+          updateCartQuantity(itemId, 'decrease');
+      }
+    
+      if (event.target.classList.contains('delete-item')) {
+          let itemId = event.target.getAttribute('data-id');
+          removeItemFromCart(itemId);
+      }
+    });
+    
+    // Update cart count
+    function updateCartCount() {
+      const cartCountElement = document.getElementById('cart');
+      if (cartCountElement) {
+          cartCountElement.textContent = getCartLength();
+      }
+    }
+    
+    // Refresh cart popover
+    function refreshCartPopover() {
+      const popoverElement = document.getElementById('popcart');
+      if (popoverElement) {
+          const popoverInstance = bootstrap.Popover.getInstance(popoverElement);
+          if (popoverInstance) {
+              popoverInstance.dispose();
+          }
+          new bootstrap.Popover(popoverElement, {
+              content: renderCartPopover(),
+              html: true,
+              trigger: 'focus',
+              sanitize: false
+          });
+      }
+    }
+    
+    // Render cart popover
+    function renderCartPopover() {
+      const items = loadCart();
+      let cartContent = `<div class="p-3" style="width: 300px; max-height: 400px; overflow-y: auto;">`;
+      let totalPrice = getCartTotal();
+    
+      if (items.length > 0) {
+          cartContent += `<ul class="list-unstyled">`;
+          items.forEach(item => {
+              cartContent += `
+                  <li class="d-flex justify-content-between align-items-center mb-2">
+                      <div class="d-flex">
+                          <img src="${item.image}" alt="${item.name}" class="w-14" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                          <div class="ms-2">
+                              <p class="mb-0">${item.name}</p>
+                              <div class="d-flex align-items-center">
+                                  <button class="btn btn-sm btn-outline-danger decrease-cart" data-id="${item.id}">-</button>
+                                  <input id="cart-qty-${item.id}" type="text" value="${item.quantity}" class="form-control text-center mx-2 cart-quantity" style="width: 50px;" readonly>
+                                  <button class="btn btn-sm btn-outline-success increase-cart" data-id="${item.id}">+</button>
+                              </div>
+                          </div>
+                      </div>
+                      <button class="btn btn-sm delete-item" data-id="${item.id}" style="border: none; background: none;">
+                          <i class="bi bi-trash text-danger" style="font-size: 1rem;"></i>
+                      </button>
+                  </li>`;
+          });
+          cartContent += `</ul></div>`;
+          cartContent += `
+              <div class="p-3 border-top d-flex flex-column align-items-center" style="background: white; position: sticky; bottom: 0;">
+                  <div class="d-flex justify-content-between w-100">
+                      <strong>Total:</strong>
+                      <span>₹${totalPrice}</span>
+                  </div>
+                  <div class="mt-2 w-100 d-flex justify-content-between">
+                      <a href="/checkout" class="btn btn-sm px-3" style="background-color: #28a745; border-color: #28a745; color: white;">Checkout</a>
+                      <button id="closeCart" class="btn btn-sm px-3" style="background-color: #dc3545; border-color: #dc3545; color: white; margin-left: 10px;">
+                          <i class="bi bi-x-circle-fill"></i>
+                      </button>
+                  </div>
+              </div>`;
+      } else {
+          cartContent = '<p class="text-center p-3">Your cart is empty!</p>';
+      }
+    
+      return cartContent;
+    }
+    
+    // Initialize cart popover
+    document.getElementById('popcart').addEventListener('click', function () {
+      const popoverElement = document.getElementById('popcart');
+      const popoverInstance = new bootstrap.Popover(popoverElement, {
+          content: renderCartPopover(),
+          html: true,
+          trigger: 'focus',
+          sanitize: false
+      });
+      popoverInstance.show();
+    });
+    
+    // Update cart count on page load
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+    </script>

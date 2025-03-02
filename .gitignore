@@ -1,0 +1,28 @@
+# Virtual environment
+venv/
+.env
+
+# Python compiled files
+__pycache__/
+*.py[cod]
+
+# Django-related
+db.sqlite3
+*.log
+
+# Static & Media Files (Only ignore collected files, not source files)
+staticfiles/
+media/
+
+# Migrations (optional, if you don't want auto-tracking)
+**/migrations/*.py
+!**/migrations/__init__.py
+
+# IDE / Editor settings
+.vscode/
+.idea/
+*.swp
+
+# Node.js (if used for frontend assets)
+node_modules/
+package-lock.json

@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+
+{% block title %}Our Products - Organic Hub{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<section class="bg-success text-white text-center py-4">
+  <h1>🌱 Our Organic Products</h1>
+  <p>Fresh, Organic, and Sustainably Sourced</p>
+</section>
+{% endblock %}
+
+{% block body %}
+<!-- Product Section -->
+<section id="portfolio" class="portfolio section" style="background: linear-gradient(135deg, rgb(236, 227, 232), rgb(28, 150, 140));">
+  <div class="container section-title" data-aos="fade-up">
+    <h1 style="font-family: Arial, sans-serif;">Welcome to Shop</h1>
+    <p><span>Check Our</span> <span class="description-title">Products</span></p>
+  </div>
+
+  <div class="container">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          <strong>{{ message }}</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% for product, range, nSliders in allProds %}
+      <div class="container">
+        <h2 class="my-3 text-center text-success bg-light py-2">{{ product.0.category }} Flashsale</h2>
+      </div>
+
+      <div class="row">
+        {% for i in product %}
+          <div class="col-md-3 mt-3">
+            <div class="card shadow-lg border-0 rounded" style="transition: transform 0.3s ease; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);">
+              <img src="{{ i.image.url }}" class="card-img-top" alt="Image not found" style="height: 200px; object-fit: cover; border-radius: 10px;">
+              <div class="card-body" style="padding: 15px;">
+                <h5 class="card-title" id="namepr{{ i.id }}" style="font-weight: bold;">{{ i.product_name }}</h5>
+                <p class="card-text" style="font-size: 14px;">{{ i.desc|slice:"0:53" }}...</p>
+                <h6 class="card-title text-danger" style="font-weight: bold;">
+                  Price: <span id="pricepr{{ i.id }}">₹{{ i.price }}</span>
+                </h6>
+
+                <!-- Quantity Selector -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                  <button class="btn btn-success cart" 
+                          data-id="{{ i.id }}" 
+                          data-name="{{ i.product_name }}" 
+                          data-price="{{ i.price }}" 
+                          data-image="{{ i.image.url }}"
+                          onclick="addToCart({{ i.id }})"
+                          style="background-color: #28a745; color: white; border-radius: 25px; padding: 10px 20px; font-weight: bold; transition: background-color 0.3s ease;">
+                    Add To Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div> 
+</section>
+
+
+
+
+<!-- Cart and JavaScript Logic -->
+<script>
+    // Load the cart from local storage
+    function loadCart() {
+        return (JSON.parse(localStorage.getItem('cart')) || []).filter(item => item !== null);
+    }
+
+    // Save the cart to local storage
+    function saveCart(cart) {
+        localStorage.setItem('cart', JSON.stringify(cart.filter(item => item !== null)));
+    }
+
+    // Get total price of cart items
+    function getCartTotal() {
+        return loadCart().reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2);
+    }
+
+    // Get total number of items in cart
+    function getCartLength() {
+        return loadCart().reduce((total, item) => total + (item.quantity || 0), 0);
+    }
+
+    // Update cart count in UI
+    function updateCartCount() {
+      const cartCountElement = document.getElementById('cart');
+      if (cartCountElement) {
+          cartCountElement.textContent = getCartLength();
+      }
+    }
+
+    // Ensure valid products are added to cart
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.cart').forEach(button => {
+            button.addEventListener('click', function () {
+                const productId = button.getAttribute('data-id');
+                const productName = button.getAttribute('data-name');
+                const productPrice = parseFloat(button.getAttribute('data-price'));
+                const productImage = button.getAttribute('data-image');
+
+                if (!productId || !productName || isNaN(productPrice) || !productImage) {
+                    console.error("Invalid product data");
+                    return;
+                }
+
+                let cart = loadCart();
+                let found = false;
+
+                cart.forEach(item => {
+                    if (item.id === productId) {
+                        item.quantity += 1;
+                        found = true;
+                    }
+                });
+
+                if (!found) {
+                    cart.push({ id: productId, name: productName, price: productPrice, image: productImage, quantity: 1 });
+                }
+
+                saveCart(cart);
+                updateCartCount();
+            });
+        });
+    });
+
+    // Render cart popover
+    function renderCartPopover() {
+        const items = loadCart();
+        let cartContent = `<div class="p-3" style="width: 300px; max-height: 400px; overflow-y: auto;">`;
+        let totalPrice = getCartTotal();
+
+        if (items.length > 0) {
+            cartContent += `<ul class="list-unstyled">`;
+            items.forEach(item => {
+                cartContent += `
+                    <li class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="d-flex">
+                            <img src="${item.image}" alt="${item.name}" class="w-14" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                            <p class="mb-0 ms-2">${item.name} - ${item.quantity} x ₹${item.price}</p>
+                        </div>
+                        <button class="btn btn-sm delete-item" data-id="${item.id}" style="border: none; background: none;">
+                            <i class="bi bi-trash text-danger" style="font-size: 1rem;"></i>
+                        </button>
+                    </li>`;
+            });
+            cartContent += `</ul></div>`;
+            cartContent += `
+                <div class="p-3 border-top d-flex flex-column align-items-center" style="background: white; position: sticky; bottom: 0;">
+                    <div class="d-flex justify-content-between w-100">
+                        <strong>Total:</strong>
+                        <span>₹${totalPrice}</span>
+                    </div>
+                    <div class="mt-2 w-100 d-flex justify-content-between">
+                    <a href="/checkout" class="btn btn-sm px-3" style="background-color: #28a745; border-color: #28a745; color: white;">Checkout</a>
+                    <button id="closeCart" class="btn btn-sm px-3" style="background-color: #dc3545; border-color: #dc3545; color: white; margin-left: 10px;">
+                   <i class="bi bi-x-circle-fill"></i>
+                    </button>
+                </div>
+
+                </div>`;
+        } else {
+            cartContent = '<p class="text-center p-3">Your cart is empty!</p>';
+        }
+
+        return cartContent;
+    }
+
+    // Refresh popover after cart updates
+    function refreshCartPopover() {
+        const popoverElement = document.getElementById('popcart');
+        if (popoverElement) {
+            const popoverInstance = bootstrap.Popover.getInstance(popoverElement);
+            if (popoverInstance) {
+                popoverInstance.dispose();
+            }
+            new bootstrap.Popover(popoverElement, {
+                content: renderCartPopover(),
+                html: true,
+                trigger: 'focus',
+                sanitize: false
+            });
+        }
+    }
+
+    // Remove item from cart
+    function removeItemFromCart(itemId) {
+        let cart = loadCart();
+        cart = cart.filter(item => item.id !== itemId);
+        saveCart(cart);
+        updateCartCount();
+        refreshCartPopover();
+    }
+
+    // Initialize cart popover
+    document.getElementById('popcart').addEventListener('click', function () {
+        const popoverElement = document.getElementById('popcart');
+        const popoverInstance = new bootstrap.Popover(popoverElement, {
+            content: renderCartPopover(),
+            html: true,
+            trigger: 'focus',
+            sanitize: false
+        });
+        popoverInstance.show();
+
+        setTimeout(() => {
+            const closeButton = document.getElementById('closeCart');
+            if (closeButton) {
+                closeButton.addEventListener('click', function () {
+                    popoverInstance.hide();
+                });
+            }
+            document.querySelectorAll('.delete-item').forEach(button => {
+                button.addEventListener('click', function () {
+                    const itemId = this.getAttribute('data-id');
+                    removeItemFromCart(itemId);
+                    updateCartCount();
+                    popoverInstance.hide();
+                    setTimeout(() => popoverElement.click(), 300);
+                });
+            });
+        }, 200);
+    });
+
+    // Update cart count on page load
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+</script>
+
+{% endblock %}

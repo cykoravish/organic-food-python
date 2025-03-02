@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %} Blog List {% endblock %}
+
+{% block content %}
+  <h1>Blog Posts</h1>
+
+  {% if blogs %}
+    <div class="blog-list">
+      {% for blog in blogs %}
+        <div class="blog-item">
+          <h2>{{ blog.title }}</h2>
+          <p>{{ blog.content|slice:":200" }}...</p>
+          <a href="{% url 'blog_detail' blog.id %}">Read More</a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No blogs available.</p>
+  {% endif %}
+{% endblock %}

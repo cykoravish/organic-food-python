@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Processing Payment...</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <h1>Redirecting to Razorpay...</h1>
+    <h3>Please do not refresh this page.</h3>
+
+    <script>
+        var options = {
+            "key": "{{ razorpay_key }}", // Razorpay Key
+            "amount": "{{ amount }}", // Amount in paisa
+            "currency": "INR",
+            "name": "Your Store Name",
+            "description": "Order Payment",
+            "order_id": "{{ order_id }}", // Razorpay Order ID
+            "handler": function(response) {
+                // Simulate a successful payment (no real payment is processed)
+                alert("Demo Payment Successful! You will be redirected to the Home Page.");
+
+                // Simulate redirect after payment success
+                window.location.href = "/";
+            },
+            "theme": {
+                "color": "#3399cc"
+            },
+            "prefill": {
+                "name": "John Doe", // Optional: Pre-fill user details for testing
+                "email": "johndoe@example.com",
+                "contact": "9876543210"
+            }
+        };
+
+        // For demo purposes, simulate clicking the payment button automatically
+        setTimeout(function() {
+            var rzp = new Razorpay(options);
+            rzp.open();
+        }, 1000);  // Delay to simulate user clicking the button (1 second)
+    </script>
+</body>
+</html>
